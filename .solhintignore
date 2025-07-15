@@ -1,0 +1,8 @@
+# directories
+**/artifacts
+**/cache
+**/node_modules
+**/typechain-types
+
+# dependencies
+node_modules/
