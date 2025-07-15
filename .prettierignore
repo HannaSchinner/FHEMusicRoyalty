@@ -1,0 +1,11 @@
+# directories
+artifacts/
+cache/
+coverage/
+node_modules/
+typechain-types/
+
+# files
+*.env
+*.log
+package-lock.json
