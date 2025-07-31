@@ -1,6 +1,4 @@
 require("dotenv").config();
-require("@nomicfoundation/hardhat-ethers");
-require("@fhevm/hardhat-plugin");
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -10,39 +8,32 @@ module.exports = {
       optimizer: {
         enabled: true,
         runs: 200
-      },
-      evmVersion: "cancun"
+      }
     }
   },
   networks: {
     hardhat: {
-      chainId: 1337,
-      allowUnlimitedContractSize: true
+      chainId: 1337
     },
     localhost: {
       url: "http://127.0.0.1:8545",
-      chainId: 1337,
-      timeout: 60000
+      chainId: 1337
     },
     sepolia: {
       url: process.env.SEPOLIA_RPC_URL || "https://sepolia.infura.io/v3/YOUR_INFURA_KEY",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 11155111,
-      gasPrice: "auto",
-      timeout: 60000
+      chainId: 11155111
     },
     zamaTestnet: {
       url: "https://devnet.zama.ai",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 8009,
-      timeout: 60000
+      chainId: 8009
     }
   },
   etherscan: {
     apiKey: {
       sepolia: process.env.ETHERSCAN_API_KEY || ""
-    },
-    customChains: []
+    }
   },
   paths: {
     sources: "./contracts",
@@ -51,12 +42,6 @@ module.exports = {
     artifacts: "./artifacts"
   },
   mocha: {
-    timeout: 60000
-  },
-  gasReporter: {
-    enabled: process.env.REPORT_GAS === "true",
-    currency: "USD",
-    outputFile: "gas-report.txt",
-    noColors: true
+    timeout: 40000
   }
 };
