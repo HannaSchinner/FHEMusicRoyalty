@@ -1,8 +1,53 @@
 # 🎵 Privacy-Preserving Music Royalty Distribution
 
-**🚀 [Live Demo](https://your-demo-link.com)** | Built with Zama FHEVM
+**🔗 [Live Demo](https://fhe-music-royalty.vercel.app/)** | **📹 [Demo Video (Download to Watch)](./demo.mp4)** | Built with Zama FHEVM
 
 A decentralized music royalty distribution platform leveraging Fully Homomorphic Encryption (FHE) to protect payment amounts and share percentages while ensuring transparent and fair revenue allocation on-chain.
+
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/HannaSchinner/FHEMusicRoyalty)
+[![Live Demo](https://img.shields.io/badge/Demo-Live-success)](https://fhe-music-royalty.vercel.app/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+
+---
+
+## 📖 Core Concepts
+
+### FHE Contract for Confidential Music Rights Revenue Distribution
+
+This project demonstrates **privacy-preserving music royalty distribution** using Zama's FHEVM (Fully Homomorphic Encryption Virtual Machine) technology. The core concept revolves around:
+
+**🔐 Confidential Revenue Sharing**
+- Music creators can register their works with **encrypted royalty share percentages**
+- Each rights holder's portion (e.g., 50% creator, 30% producer, 20% distributor) is **encrypted on-chain**
+- Revenue distribution calculations are performed on **encrypted values** without ever exposing individual shares
+- Only the specific rights holder can decrypt and view their allocated payment amount
+
+**🎵 Privacy-First Music Rights Management**
+- Traditional blockchain systems expose all financial data publicly
+- With FHE, royalty splits remain **confidential** while maintaining verifiability
+- Rights holders can prove they received fair payment without revealing exact amounts to competitors
+- Protects sensitive business relationships and negotiated percentage agreements
+
+**🔒 How It Works**
+1. **Registration**: Rights holders register and get verified by the platform owner
+2. **Track Registration**: Music tracks are registered with encrypted royalty share percentages (stored as euint32)
+3. **Revenue Pool**: When royalties are collected, they're pooled and encrypted (euint64)
+4. **Private Distribution**: Smart contract calculates each holder's share using FHE operations (multiplication on encrypted data)
+5. **Selective Decryption**: Each rights holder requests decryption of **only their payment** using EIP-712 signatures
+6. **Secure Claims**: Holders claim their allocated ETH after verifying the decrypted amount
+
+**💡 Key Innovation**
+The breakthrough is performing percentage-based calculations **entirely on encrypted data**:
+```solidity
+// Traditional (public): payment = totalAmount * share / 10000
+// FHE (private): encryptedPayment = FHE.mul(encryptedTotal, encryptedShare) / 10000
+```
+
+This ensures:
+- ✅ **Privacy**: No one can see individual royalty percentages or payment amounts
+- ✅ **Fairness**: Calculations are performed correctly on-chain with encryption
+- ✅ **Transparency**: Distribution logic is public and auditable
+- ✅ **Security**: Only authorized recipients can decrypt their specific payments
 
 ---
 
@@ -56,7 +101,7 @@ A decentralized music royalty distribution platform leveraging Fully Homomorphic
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Data Flow
+### Confidential Revenue Distribution Flow
 
 ```
 Track Registration Flow:
@@ -65,17 +110,18 @@ Creator → registerTrack(metadata, holders[], encryptedShares[])
          → Encrypted shares stored on-chain (TFHE.euint32)
          → TrackRegistered event emitted
 
-Royalty Distribution Flow:
+Royalty Distribution Flow (Confidential):
 Owner → createRoyaltyPool(trackId) + ETH
       → distributeRoyalties(poolId)
       → Contract calculates encrypted payments:
-         payment[i] = totalAmount * encryptedShare[i] / 10000
+         encryptedPayment[i] = totalAmount * encryptedShare[i] / 10000
+         (All calculations on encrypted data!)
       → RoyaltiesDistributed event emitted
 
-Claim Flow:
+Claim Flow (Privacy-Preserving):
 Rights Holder → claimRoyalty(poolId)
-              → Request decryption via Gateway
-              → Verify decrypted amount
+              → Request decryption via Gateway (EIP-712 signature)
+              → Verify decrypted amount privately
               → Transfer ETH to rights holder
               → RoyaltyClaimed event emitted
 ```
@@ -190,8 +236,8 @@ Before getting started, ensure you have:
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/your-username/privacy-preserving-music-royalty.git
-cd privacy-preserving-music-royalty
+git clone https://github.com/HannaSchinner/FHEMusicRoyalty.git
+cd FHEMusicRoyalty
 ```
 
 ### 2. Install Dependencies
@@ -253,6 +299,31 @@ Compiling 7 Solidity files...
 Successfully compiled 7 contracts
 ✓ PrivateMusicRoyalty.sol (Solidity 0.8.24)
 ```
+
+---
+
+## 🌐 Live Demo
+
+**🔗 Access the live application:** [https://fhe-music-royalty.vercel.app/](https://fhe-music-royalty.vercel.app/)
+
+**📹 Demo Video:** The demonstration video is available in the repository as `demo.mp4`. **Please download the file to watch** as inline playback may not work in all viewers.
+
+```bash
+# Download and watch the demo video
+git clone https://github.com/HannaSchinner/FHEMusicRoyalty.git
+cd FHEMusicRoyalty
+# Open demo.mp4 with your video player
+```
+
+### What's in the Demo
+
+The video showcases:
+1. **Wallet Connection** - Connecting MetaMask to the application
+2. **Rights Holder Registration** - Registering as a music rights holder
+3. **Track Registration** - Creating a music track with encrypted royalty shares
+4. **Royalty Pool Creation** - Funding a pool with ETH for distribution
+5. **Confidential Distribution** - Calculating payments on encrypted data
+6. **Private Claims** - Rights holders claiming their payments with decryption
 
 ---
 
@@ -429,7 +500,7 @@ await tx.wait();
 console.log("✓ Royalty pool created");
 ```
 
-### 5. Distribute Royalties
+### 5. Distribute Royalties (Confidential)
 
 ```javascript
 const poolId = 0;
@@ -468,7 +539,7 @@ This script demonstrates:
 ### Smart Contracts
 - **Solidity** v0.8.24 - Smart contract language
 - **Zama FHEVM** v0.7.0 - Fully Homomorphic Encryption
-- **OpenZeppelin** - Security utilities (if applicable)
+- **OpenZeppelin** - Security utilities
 
 ### Development Tools
 - **Hardhat** v2.19.0 - Development framework
@@ -544,6 +615,7 @@ privacy-preserving-music-royalty/
 │   ├── TOOLCHAIN.md              # Toolchain integration
 │   └── PROJECT_SUMMARY.md        # Project completion summary
 │
+├── demo.mp4                      # Demonstration video
 └── package.json                  # Dependencies and scripts
 ```
 
@@ -736,7 +808,12 @@ Special thanks to the Zama team for pioneering privacy-preserving smart contract
 
 ---
 
-## 📞 Resources & Links
+## 🔗 Links & Resources
+
+### Project Links
+- **🌐 Live Demo**: [https://fhe-music-royalty.vercel.app/](https://fhe-music-royalty.vercel.app/)
+- **💻 GitHub Repository**: [https://github.com/HannaSchinner/FHEMusicRoyalty](https://github.com/HannaSchinner/FHEMusicRoyalty)
+- **📹 Demo Video**: Download `demo.mp4` from repository
 
 ### Official Documentation
 - [Zama Documentation](https://docs.zama.ai) - FHEVM guides and tutorials
@@ -751,7 +828,7 @@ Special thanks to the Zama team for pioneering privacy-preserving smart contract
 - [Zama Explorer](https://explorer.zama.ai) - Zama block explorer
 
 ### Community
-- [GitHub Issues](https://github.com/your-username/privacy-preserving-music-royalty/issues) - Report bugs or request features
+- [GitHub Issues](https://github.com/HannaSchinner/FHEMusicRoyalty/issues) - Report bugs or request features
 - [Zama Discord](https://discord.gg/zama) - Join the FHEVM community
 
 ---
@@ -762,6 +839,6 @@ Special thanks to the Zama team for pioneering privacy-preserving smart contract
 
 **Empowering Fair Music Royalty Distribution with Privacy**
 
-[⭐ Star this repo](https://github.com/your-username/privacy-preserving-music-royalty) | [🐛 Report Bug](https://github.com/your-username/privacy-preserving-music-royalty/issues) | [💡 Request Feature](https://github.com/your-username/privacy-preserving-music-royalty/issues)
+[⭐ Star this repo](https://github.com/HannaSchinner/FHEMusicRoyalty) | [🐛 Report Bug](https://github.com/HannaSchinner/FHEMusicRoyalty/issues) | [💡 Request Feature](https://github.com/HannaSchinner/FHEMusicRoyalty/issues)
 
 </div>
