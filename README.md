@@ -1,6 +1,6 @@
 # 🎵 Privacy-Preserving Music Royalty Distribution
 
-**🔗 [Live Demo](https://fhe-music-royalty.vercel.app/)** | **📹 [Demo Video (Download to Watch)](./demo.mp4)** | Built with Zama FHEVM
+**🔗 [Live Demo](https://fhe-music-royalty.vercel.app/)** | **📹 [Demo Video (Download to Watch) demo.mp4]** | Built with Zama FHEVM
 
 A decentralized music royalty distribution platform leveraging Fully Homomorphic Encryption (FHE) to protect payment amounts and share percentages while ensuring transparent and fair revenue allocation on-chain.
 
