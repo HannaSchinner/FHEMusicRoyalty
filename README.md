@@ -9,6 +9,27 @@ A decentralized music royalty distribution platform leveraging Fully Homomorphic
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 ---
+---
+
+## 🌐 Live Demo
+
+**🔗 Access the live application:** [https://fhe-music-royalty.vercel.app/](https://fhe-music-royalty.vercel.app/)
+
+**📹 Demo Video:** The demonstration video is available in the repository as `demo.mp4`. **Please download the file to watch** as inline playback may not work in all viewers.
+
+
+
+### What's in the Demo
+
+The video showcases:
+1. **Wallet Connection** - Connecting MetaMask to the application
+2. **Rights Holder Registration** - Registering as a music rights holder
+3. **Track Registration** - Creating a music track with encrypted royalty shares
+4. **Royalty Pool Creation** - Funding a pool with ETH for distribution
+5. **Confidential Distribution** - Calculating payments on encrypted data
+6. **Private Claims** - Rights holders claiming their payments with decryption
+
+---
 
 ## 📖 Core Concepts
 
@@ -300,32 +321,7 @@ Successfully compiled 7 contracts
 ✓ PrivateMusicRoyalty.sol (Solidity 0.8.24)
 ```
 
----
 
-## 🌐 Live Demo
-
-**🔗 Access the live application:** [https://fhe-music-royalty.vercel.app/](https://fhe-music-royalty.vercel.app/)
-
-**📹 Demo Video:** The demonstration video is available in the repository as `demo.mp4`. **Please download the file to watch** as inline playback may not work in all viewers.
-
-```bash
-# Download and watch the demo video
-git clone https://github.com/HannaSchinner/FHEMusicRoyalty.git
-cd FHEMusicRoyalty
-# Open demo.mp4 with your video player
-```
-
-### What's in the Demo
-
-The video showcases:
-1. **Wallet Connection** - Connecting MetaMask to the application
-2. **Rights Holder Registration** - Registering as a music rights holder
-3. **Track Registration** - Creating a music track with encrypted royalty shares
-4. **Royalty Pool Creation** - Funding a pool with ETH for distribution
-5. **Confidential Distribution** - Calculating payments on encrypted data
-6. **Private Claims** - Rights holders claiming their payments with decryption
-
----
 
 ## 🧪 Testing
 
