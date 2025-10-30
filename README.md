@@ -1,712 +1,1031 @@
-# 🔐 Privacy-Protected Cultural Voting Platform
+# 🎵 Privacy-Preserving Music Royalty Distribution
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Solidity](https://img.shields.io/badge/Solidity-0.8.24-blue.svg)](https://soliditylang.org/)
-[![Hardhat](https://img.shields.io/badge/Hardhat-2.19-yellow.svg)](https://hardhat.org/)
+**🔗 [Live Demo](https://fhe-music-royalty.vercel.app/)** | **📹 [Demo Video (Download to Watch) demo.mp4]** | Built with Zama FHEVM
 
-**🌐 Live Demo**: [https://fhe-cultural-voting.vercel.app/](https://fhe-cultural-voting.vercel.app/)
+A decentralized music royalty distribution platform leveraging Fully Homomorphic Encryption (FHE) to protect payment amounts and share percentages while ensuring transparent and fair revenue allocation on-chain.
 
-**📹 Video Demo**: Download and watch `demo.mp4` for complete demonstration
-
-**💻 GitHub**: [https://github.com/KittyOrn/FHECulturalVoting](https://github.com/KittyOrn/FHECulturalVoting)
-
-A **privacy-preserving** voting system for cultural project evaluation built with **Zama FHEVM** technology. This platform enables confidential voting on artistic proposals while maintaining transparent and verifiable results through Fully Homomorphic Encryption (FHE).
-
-Built for the **Zama FHE Challenge** - demonstrating practical privacy-preserving applications in democratic decision-making for arts and culture.
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/HannaSchinner/FHEMusicRoyalty)
+[![Live Demo](https://img.shields.io/badge/Demo-Live-success)](https://fhe-music-royalty.vercel.app/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 ---
 
-## 📋 Table of Contents
+## 📖 Core Concepts
 
-- [Core Concepts](#-core-concepts)
-- [Features](#-features)
-- [Privacy Model](#-privacy-model)
-- [Architecture](#️-architecture)
-- [Quick Start](#-quick-start)
-- [Technical Implementation](#-technical-implementation)
-- [Testing](#-testing)
-- [Deployment](#-deployment)
-- [Tech Stack](#-tech-stack)
-- [Security](#-security)
-- [License](#-license)
+### FHE Contract for Confidential Music Rights Revenue Distribution
 
----
+This project demonstrates **privacy-preserving music royalty distribution** using Zama's FHEVM (Fully Homomorphic Encryption Virtual Machine) technology. The core concept revolves around:
 
-## 🎯 Core Concepts
+**🔐 Confidential Revenue Sharing**
+- Music creators can register their works with **encrypted royalty share percentages**
+- Each rights holder's portion (e.g., 50% creator, 30% producer, 20% distributor) is **encrypted on-chain**
+- Revenue distribution calculations are performed on **encrypted values** without ever exposing individual shares
+- Only the specific rights holder can decrypt and view their allocated payment amount
 
-### Confidential Public Transportation Analytics
+**🎵 Privacy-First Music Rights Management**
+- Traditional blockchain systems expose all financial data publicly
+- With FHE, royalty splits remain **confidential** while maintaining verifiability
+- Rights holders can prove they received fair payment without revealing exact amounts to competitors
+- Protects sensitive business relationships and negotiated percentage agreements
 
-This platform demonstrates **FHE-based privacy protection for sensitive public data**, specifically applied to cultural voting but designed with broader applications in mind, such as:
+**🔒 How It Works**
+1. **Registration**: Rights holders register and get verified by the platform owner
+2. **Track Registration**: Music tracks are registered with encrypted royalty share percentages (stored as euint32)
+3. **Revenue Pool**: When royalties are collected, they're pooled and encrypted (euint64)
+4. **Private Distribution**: Smart contract calculates each holder's share using FHE operations (multiplication on encrypted data)
+5. **Selective Decryption**: Each rights holder requests decryption of **only their payment** using EIP-712 signatures
+6. **Secure Claims**: Holders claim their allocated ETH after verifying the decrypted amount
 
-#### 🚌 Confidential Public Transport Card Data
-
-The underlying FHE technology can be applied to protect sensitive transportation data:
-
-- **Private Journey Analysis**: Encrypted travel patterns without revealing individual routes
-- **Homomorphic Aggregation**: Calculate usage statistics on encrypted data
-- **Privacy-Preserving Analytics**: Understand public transport trends while protecting user privacy
-- **Confidential Payment Processing**: Secure transaction data without exposing personal spending
-
-#### 🗳️ Current Implementation: Cultural Voting
-
-This implementation showcases the FHE technology through a cultural voting system:
-
-- **Encrypted Scores**: Individual ratings (1-10) stored as encrypted values (`euint8`)
-- **Private Preferences**: Vote choices remain confidential to prevent coercion
-- **Homomorphic Tallying**: Aggregate votes without decrypting individual submissions
-- **Verifiable Results**: Final outcomes can be verified while maintaining privacy
-
-#### 🔐 FHE Technology Benefits
-
-**Fully Homomorphic Encryption (FHE)** enables computation on encrypted data:
-
-```
-Encrypted Data → Compute on Encrypted → Get Encrypted Result → Decrypt Result
-        ↓                                         ↓
-   Raw data never exposed              Individual privacy maintained
+**💡 Key Innovation**
+The breakthrough is performing percentage-based calculations **entirely on encrypted data**:
+```solidity
+// Traditional (public): payment = totalAmount * share / 10000
+// FHE (private): encryptedPayment = FHE.mul(encryptedTotal, encryptedShare) / 10000
 ```
 
-**Key Advantages**:
-- 🛡️ **End-to-End Privacy**: Data remains encrypted throughout processing
-- 🔢 **Meaningful Computation**: Perform complex operations without decryption
-- ✅ **Verifiable Results**: Cryptographic proofs ensure correctness
-- 🌐 **Decentralized Trust**: No need for trusted intermediaries
-
-#### 💡 Broader Applications
-
-Beyond voting, this FHE approach enables:
-
-1. **Confidential Public Services**
-   - Anonymous public transport analytics
-   - Private healthcare data analysis
-   - Secure government benefit distribution
-
-2. **Privacy-Preserving Finance**
-   - Confidential transaction amounts
-   - Private credit scoring
-   - Encrypted auction bidding
-
-3. **Secure Data Sharing**
-   - Collaborative analytics without data exposure
-   - Cross-organization insights
-   - Regulatory compliance with privacy
+This ensures:
+- ✅ **Privacy**: No one can see individual royalty percentages or payment amounts
+- ✅ **Fairness**: Calculations are performed correctly on-chain with encryption
+- ✅ **Transparency**: Distribution logic is public and auditable
+- ✅ **Security**: Only authorized recipients can decrypt their specific payments
 
 ---
 
 ## ✨ Features
 
-- 🔐 **Fully Private Voting**: Individual scores (1-10) encrypted using FHE technology
-- 🔢 **Homomorphic Aggregation**: Vote tallying on encrypted data without decryption
-- 🎨 **Cultural Project Evaluation**: Specialized for arts, music, literature, exhibitions
-- ✅ **Transparent Results**: Final outcomes verifiable while maintaining voter privacy
-- 👥 **Voter Authorization**: Controlled access with admin-managed permissions
-- 🔄 **Multiple Rounds**: Support for sequential voting campaigns
-- ⛽ **Gas Optimized**: Compiler optimization (800 runs) for efficient operations
-- 🛡️ **DoS Protected**: Bounded operations and complexity limits
-- 🧪 **Thoroughly Tested**: 47 comprehensive test cases with >95% coverage
-- 🚀 **CI/CD Ready**: Automated testing, linting, and deployment
-
----
-
-## 🔐 Privacy Model
-
-### What's Private ✅
-
-- **Individual Vote Scores** - Encrypted using `euint8`, only voters can decrypt their own votes
-- **Vote Aggregation** - Homomorphic computation without revealing individual contributions
-- **Voter Preferences** - Complete confidentiality protects against coercion
-- **Intermediate Totals** - Processing occurs on encrypted values
-
-### What's Public 📊
-
-- **Voting Participation** - Vote submission events visible on-chain
-- **Final Results** - Aggregate scores and winning projects (after round ends)
-- **Project Metadata** - Names, descriptions, and categories
-- **Voter Authorization Status** - Who is authorized to vote
-
-### Decryption Permissions 🔑
-
-- **Voters**: Can decrypt their own vote submissions
-- **Contract**: Performs homomorphic operations without decryption
-- **Admin**: Can end rounds and trigger results revelation
-- **Results**: Final aggregates revealed only after voting concludes
-
-### Privacy Guarantees
-
-```
-User A votes 7 → FHE.asEuint8(7) → euint8(encrypted)
-User B votes 5 → FHE.asEuint8(5) → euint8(encrypted)
-User C votes 9 → FHE.asEuint8(9) → euint8(encrypted)
-
-On-chain storage: euint8[], euint8[], euint8[]
-                       ↓
-              Homomorphic Addition
-                       ↓
-              euint8(21) encrypted
-                       ↓
-           Authorized Decryption
-                       ↓
-              Final Score: 21
-
-❌ Individual votes (7, 5, 9) remain private
-✅ Only aggregated total (21) can be decrypted
-```
+- 🔐 **Privacy-First Design** - Royalty shares and payment amounts encrypted using Zama FHEVM
+- 🎵 **Rights Management** - On-chain registration and verification of music creators and rights holders
+- 💰 **Automated Distribution** - Encrypted royalty calculations with secure payment claims
+- 🔒 **Access Control** - Role-based permissions with owner and verified rights holder management
+- 🏗️ **Production Ready** - Comprehensive testing (21+ tests), CI/CD pipeline, security auditing
+- ⚡ **Gas Optimized** - Custom errors, storage packing, and compiler optimization (runs: 200)
+- 📊 **Complete Monitoring** - Gas reporting, coverage tracking, and performance profiling
+- 🧪 **Multi-Network Support** - Deployable to Sepolia testnet and Zama devnet
 
 ---
 
 ## 🏗️ Architecture
 
-### System Overview
-
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    User Interface                        │
-│              (Web3 + MetaMask + ethers.js)              │
-└────────────────────┬────────────────────────────────────┘
-                     │
-                     ▼
-┌─────────────────────────────────────────────────────────┐
-│              Zama FHEVM Smart Contract                   │
-│                 (CulturalVoting.sol)                     │
-├─────────────────────────────────────────────────────────┤
-│  ├── Project Management                                  │
-│  │   ├── proposeProject()                               │
-│  │   └── getProjectInfo()                               │
-│  │                                                       │
-│  ├── Voter Authorization                                │
-│  │   ├── authorizeVoter()                               │
-│  │   └── revokeVoter()                                  │
-│  │                                                       │
-│  ├── Voting Round Management                            │
-│  │   ├── startVotingRound()                             │
-│  │   ├── endVotingRound()                               │
-│  │   └── getCurrentRoundInfo()                          │
-│  │                                                       │
-│  └── Encrypted Voting                                   │
-│      ├── submitVote() - euint8 encrypted                │
-│      ├── FHE.asEuint8() - encryption                    │
-│      └── FHE.allowThis() - permission                   │
-└─────────────────────────────────────────────────────────┘
-                     │
-                     ▼
-┌─────────────────────────────────────────────────────────┐
-│                Zama FHEVM Network                        │
-│          (Fully Homomorphic Encryption)                  │
-├─────────────────────────────────────────────────────────┤
-│  ├── FHE Operations                                      │
-│  │   ├── euint8 arithmetic                              │
-│  │   ├── Homomorphic addition                           │
-│  │   └── Encrypted comparisons                          │
-│  │                                                       │
-│  └── Decryption Gateway                                 │
-│      ├── Permission verification                        │
-│      ├── Asynchronous decryption                        │
-│      └── Result callback                                │
-└─────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                     System Architecture                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Frontend Layer                                                  │
+│  ┌──────────────────────────────────────────────────────┐      │
+│  │  Web3 Interface  →  Ethers.js  →  MetaMask          │      │
+│  └──────────────────────────────────────────────────────┘      │
+│                           ↓                                      │
+│  Smart Contract Layer (Solidity 0.8.24)                        │
+│  ┌──────────────────────────────────────────────────────┐      │
+│  │  PrivateMusicRoyalty.sol                            │      │
+│  │  ├─ Rights Holder Management                         │      │
+│  │  ├─ Track Registration (with encrypted shares)       │      │
+│  │  ├─ Royalty Pool Creation                            │      │
+│  │  └─ Distribution & Claims                            │      │
+│  └──────────────────────────────────────────────────────┘      │
+│                           ↓                                      │
+│  Privacy Layer (Zama FHEVM)                                     │
+│  ┌──────────────────────────────────────────────────────┐      │
+│  │  Encrypted Types: euint32, euint64, ebool           │      │
+│  │  Operations: TFHE.add, TFHE.mul, TFHE.asEuint64     │      │
+│  │  Decryption: Gateway Oracle + ACL Permissions        │      │
+│  └──────────────────────────────────────────────────────┘      │
+│                           ↓                                      │
+│  Blockchain Layer                                               │
+│  ┌──────────────────────────────────────────────────────┐      │
+│  │  Sepolia Testnet (ChainID: 11155111)                │      │
+│  │  Zama Devnet (ChainID: 8009)                        │      │
+│  └──────────────────────────────────────────────────────┘      │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### Encrypted Vote Flow
+### Confidential Revenue Distribution Flow
 
 ```
-1. Voter submits score (1-10)
-         ↓
-2. Client-side validation
-         ↓
-3. FHE.asEuint8(score) → encrypted
-         ↓
-4. Store euint8 on-chain
-         ↓
-5. FHE.allowThis() → contract permission
-         ↓
-6. FHE.allow(voter) → voter permission
-         ↓
-7. Emit VoteSubmitted event
-         ↓
-8. Vote stored privately ✅
-```
+Track Registration Flow:
+Creator → registerTrack(metadata, holders[], encryptedShares[])
+         → Smart Contract validates & stores
+         → Encrypted shares stored on-chain (TFHE.euint32)
+         → TrackRegistered event emitted
 
-### Results Aggregation Flow
+Royalty Distribution Flow (Confidential):
+Owner → createRoyaltyPool(trackId) + ETH
+      → distributeRoyalties(poolId)
+      → Contract calculates encrypted payments:
+         encryptedPayment[i] = totalAmount * encryptedShare[i] / 10000
+         (All calculations on encrypted data!)
+      → RoyaltiesDistributed event emitted
 
-```
-1. Admin calls endVotingRound()
-         ↓
-2. Collect all euint8 votes
-         ↓
-3. Request decryption via FHE gateway
-         ↓
-4. Decrypt all scores asynchronously
-         ↓
-5. Calculate project totals
-         ↓
-6. Determine winning project
-         ↓
-7. Emit ResultsRevealed event
-         ↓
-8. Update votingRound.resultsRevealed
-         ↓
-9. Increment currentVotingRound
+Claim Flow (Privacy-Preserving):
+Rights Holder → claimRoyalty(poolId)
+              → Request decryption via Gateway (EIP-712 signature)
+              → Verify decrypted amount privately
+              → Transfer ETH to rights holder
+              → RoyaltyClaimed event emitted
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🔐 FHEVM Technology
 
-### Prerequisites
+This project uses **Zama's FHEVM (Fully Homomorphic Encryption Virtual Machine)** to enable confidential on-chain computations. Unlike traditional smart contracts where all data is publicly visible, FHEVM allows mathematical operations on encrypted data without ever decrypting it.
 
-- Node.js 18.x or higher
-- npm or yarn
-- MetaMask wallet
-- Sepolia testnet ETH
+### Encrypted Data Types
 
-### Installation
+```solidity
+import "fhevm/lib/TFHE.sol";
+
+// Store encrypted royalty share (0-10000 representing 0.00%-100.00%)
+euint32 private encryptedShare;
+
+// Store encrypted payment amount
+euint64 private encryptedPayment;
+
+// Store encrypted boolean flags
+ebool private hasClaimedFlag;
+```
+
+### FHE Operations Example
+
+```solidity
+// Calculate encrypted payment: payment = totalAmount * share / 10000
+function distributeRoyalties(uint256 poolId) external onlyOwner {
+    RoyaltyPool storage pool = royaltyPools[poolId];
+    Track storage track = tracks[pool.trackId];
+
+    // Convert total amount to encrypted uint64
+    euint64 encryptedTotal = TFHE.asEuint64(pool.totalAmount);
+
+    // For each rights holder
+    for (uint256 i = 0; i < track.rightsHolders.length; i++) {
+        address holder = track.rightsHolders[i];
+
+        // Get encrypted share (euint32)
+        euint32 share = track.shares[holder];
+
+        // Convert share to euint64 for calculation
+        euint64 shareAs64 = TFHE.asEuint64(share);
+
+        // Encrypted multiplication: encryptedTotal * share
+        euint64 product = TFHE.mul(encryptedTotal, shareAs64);
+
+        // Encrypted division by 10000 (using shift for optimization)
+        euint64 payment = TFHE.div(product, 10000);
+
+        // Store encrypted payment (never decrypted on-chain)
+        pool.payments[holder] = payment;
+
+        // Grant decryption permission only to the rights holder
+        TFHE.allowThis(payment);
+        TFHE.allow(payment, holder);
+    }
+
+    pool.distributed = true;
+    emit RoyaltiesDistributed(poolId, track.rightsHolders.length);
+}
+```
+
+### Decryption Process
+
+```solidity
+// Rights holder claims their payment
+function claimRoyalty(uint256 poolId) external {
+    RoyaltyPool storage pool = royaltyPools[poolId];
+
+    // Get encrypted payment
+    euint64 encryptedPayment = pool.payments[msg.sender];
+
+    // Request decryption (async via Gateway oracle)
+    uint256 decryptedAmount = TFHE.decrypt(encryptedPayment);
+
+    // Transfer actual amount
+    payable(msg.sender).transfer(decryptedAmount);
+
+    pool.claimed[msg.sender] = true;
+    emit RoyaltyClaimed(poolId, msg.sender, decryptedAmount);
+}
+```
+
+### Privacy Guarantees
+
+| **What's Private** | **What's Public** | **Decryption Permissions** |
+|--------------------|-------------------|----------------------------|
+| Individual royalty share percentages | Track exists on-chain | Only rights holder can decrypt their share |
+| Calculated payment amounts | Number of rights holders | Only recipient can decrypt their payment |
+| Whether someone has claimed | Transaction occurred | Owner cannot see individual amounts |
+| Total pool amount (encrypted) | Pool ID and track ID | Gateway oracle assists decryption |
+
+---
+
+## 📋 Prerequisites
+
+Before getting started, ensure you have:
+
+- **Node.js** v18.x or v20.x
+- **npm** v8+ or **yarn** v1.22+
+- **MetaMask** or compatible Web3 wallet
+- **Git** for version control
+- **Sepolia ETH** for testnet deployment ([Sepolia Faucet](https://sepoliafaucet.com/))
+
+---
+
+## 🚀 Installation
+
+### 1. Clone Repository
 
 ```bash
-# Clone repository
-git clone https://github.com/KittyOrn/FHECulturalVoting.git
-cd FHECulturalVoting
-
-# Install dependencies
-npm install
-
-# Copy environment template
-cp .env.example .env
-
-# Edit .env with your keys
+git clone https://github.com/HannaSchinner/FHEMusicRoyalty.git
+cd FHEMusicRoyalty
 ```
 
-### Environment Configuration
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+This will install:
+- Hardhat development framework
+- Zama FHEVM contracts and plugins
+- Ethers.js for blockchain interaction
+- Testing libraries (Mocha, Chai)
+- Code quality tools (Solhint, ESLint, Prettier)
+
+### 3. Configure Environment
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` with your configuration:
 
 ```env
-# Private Keys
-PRIVATE_KEY=your_wallet_private_key
-ADMIN_PRIVATE_KEY=your_admin_private_key
-PAUSER_PRIVATE_KEY=your_pauser_private_key
+# Network Configuration
+PRIVATE_KEY=your_private_key_without_0x_prefix
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_KEY
+MAINNET_RPC_URL=https://mainnet.infura.io/v3/YOUR_INFURA_KEY
 
-# Network
-SEPOLIA_RPC_URL=https://rpc.sepolia.org
+# Contract Verification
 ETHERSCAN_API_KEY=your_etherscan_api_key
 
-# Gas Reporting
+# Gas & Performance
 REPORT_GAS=true
-COINMARKETCAP_API_KEY=your_api_key
+COINMARKETCAP_API_KEY=your_coinmarketcap_api_key
 
-# Role Addresses
-ADMIN_ADDRESS=0x...
-PAUSER_ADDRESS=0x...
+# Security
+PAUSER_ADDRESS=0x0000000000000000000000000000000000000000
+ADMIN_ADDRESS=0x0000000000000000000000000000000000000000
+
+# FHE Configuration
+ZAMA_NETWORK_URL=https://devnet.zama.ai
+ZAMA_CHAIN_ID=8009
+
+# Testing
+COVERAGE=true
+TEST_TIMEOUT=300000
 ```
 
-### Compile Contracts
+### 4. Compile Contracts
 
 ```bash
 npm run compile
 ```
 
-### Run Tests
-
-```bash
-# Run all tests
-npm test
-
-# With coverage
-npm run test:coverage
-
-# With gas reporting
-npm run test:gas
+**Expected Output:**
 ```
-
-### Deploy to Sepolia
-
-```bash
-npm run deploy
-```
-
-### Verify Contract
-
-```bash
-npm run verify
+Compiling 7 Solidity files...
+Successfully compiled 7 contracts
+✓ PrivateMusicRoyalty.sol (Solidity 0.8.24)
 ```
 
 ---
 
-## 🔧 Technical Implementation
+## 🌐 Live Demo
 
-### Smart Contract: CulturalVoting.sol
+**🔗 Access the live application:** [https://fhe-music-royalty.vercel.app/](https://fhe-music-royalty.vercel.app/)
 
-#### Key Components
+**📹 Demo Video:** The demonstration video is available in the repository as `demo.mp4`. **Please download the file to watch** as inline playback may not work in all viewers.
 
-**1. Encrypted Vote Storage**
-
-```solidity
-struct Vote {
-    euint8 encryptedScore;  // FHE encrypted score (1-10)
-    bool hasVoted;          // Submission status
-    uint256 timestamp;      // Vote time
-}
+```bash
+# Download and watch the demo video
+git clone https://github.com/HannaSchinner/FHEMusicRoyalty.git
+cd FHEMusicRoyalty
+# Open demo.mp4 with your video player
 ```
 
-**2. Voting Round Structure**
+### What's in the Demo
 
-```solidity
-struct VotingRound {
-    uint8[] projectIds;         // Projects in this round
-    bool votingActive;          // Round status
-    bool resultsRevealed;       // Results published
-    uint256 startTime;          // Start timestamp
-    uint256 endTime;            // End timestamp
-    address[] voters;           // Participants
-    uint8 winningProjectId;     // Winner
-    uint8 maxScore;            // Highest score
-}
-```
-
-**3. Submit Vote with FHE**
-
-```solidity
-function submitVote(uint8 _projectId, uint8 _score)
-    external
-    onlyAuthorizedVoter
-    onlyDuringVoting
-{
-    require(_score >= 1 && _score <= 10, "Score must be between 1-10");
-
-    // Encrypt the score
-    euint8 encryptedScore = FHE.asEuint8(_score);
-
-    // Store encrypted vote
-    votes[currentVotingRound][_projectId][msg.sender] = Vote({
-        encryptedScore: encryptedScore,
-        hasVoted: true,
-        timestamp: block.timestamp
-    });
-
-    // Set permissions
-    FHE.allowThis(encryptedScore);
-    FHE.allow(encryptedScore, msg.sender);
-
-    emit VoteSubmitted(msg.sender, currentVotingRound, _projectId);
-}
-```
-
-**4. Homomorphic Aggregation**
-
-```solidity
-function _requestResultsDecryption() private {
-    VotingRound storage round = votingRounds[currentVotingRound];
-
-    // Collect encrypted votes
-    bytes32[] memory cts = new bytes32[](totalVotes);
-    uint256 index = 0;
-
-    for (uint i = 0; i < round.projectIds.length; i++) {
-        uint8 projectId = round.projectIds[i];
-        for (uint j = 0; j < round.voters.length; j++) {
-            address voter = round.voters[j];
-            if (votes[currentVotingRound][projectId][voter].hasVoted) {
-                cts[index] = FHE.toBytes32(
-                    votes[currentVotingRound][projectId][voter].encryptedScore
-                );
-                index++;
-            }
-        }
-    }
-
-    // Request asynchronous decryption
-    FHE.requestDecryption(cts, this.processResults.selector);
-}
-```
-
-### FHE Operations
-
-#### Encryption
-
-```solidity
-// Client-side (conceptual)
-score = 7
-encryptedScore = FHE.encrypt(score, publicKey)
-
-// On-chain
-euint8 encryptedScore = FHE.asEuint8(score);
-```
-
-#### Homomorphic Addition
-
-```solidity
-// Works on encrypted values directly
-euint8 total = encryptedScore1 + encryptedScore2 + encryptedScore3;
-// No decryption needed during computation!
-```
-
-#### Authorized Decryption
-
-```solidity
-// Only authorized parties can decrypt
-FHE.allowThis(encryptedScore);     // Contract permission
-FHE.allow(encryptedScore, voter);  // Voter permission
-
-// Decryption happens via gateway
-FHE.requestDecryption(encryptedValues, callbackSelector);
-```
+The video showcases:
+1. **Wallet Connection** - Connecting MetaMask to the application
+2. **Rights Holder Registration** - Registering as a music rights holder
+3. **Track Registration** - Creating a music track with encrypted royalty shares
+4. **Royalty Pool Creation** - Funding a pool with ETH for distribution
+5. **Confidential Distribution** - Calculating payments on encrypted data
+6. **Private Claims** - Rights holders claiming their payments with decryption
 
 ---
 
 ## 🧪 Testing
 
-### Test Coverage
+This project includes a comprehensive test suite with **21+ test cases** covering all functionality.
 
+### Run All Tests
+
+```bash
+npm test
 ```
-┌─────────────────────┬────────┬────────┬────────┬────────┐
-│ File                │ % Stmts│ % Branch│ % Funcs│ % Lines│
-├─────────────────────┼────────┼────────┼────────┼────────┤
-│ CulturalVoting.sol  │  96.5% │  92.3% │  95.8% │  97.1% │
-└─────────────────────┴────────┴────────┴────────┴────────┘
 
-Total: 47 test cases
-Status: ✅ All passing
+### Run Tests with Gas Reporting
+
+```bash
+npm run test:gas
+```
+
+### Generate Coverage Report
+
+```bash
+npm run coverage
 ```
 
 ### Test Categories
 
-1. **Deployment Tests** (6 tests)
-   - Contract initialization
-   - Admin setup
-   - Initial state verification
+| Category | Tests | Description |
+|----------|-------|-------------|
+| Deployment | 4 | Contract initialization and ownership |
+| Rights Holder Registration | 3 | Registration and verification process |
+| Rights Holder Verification | 3 | Owner-only verification controls |
+| Track Registration | 4 | Track creation with encrypted shares |
+| Royalty Pool Creation | 3 | Pool creation and validation |
+| Royalty Distribution | 2 | Encrypted payment calculations |
+| Access Control | 1 | Permission and authorization checks |
+| Gas Optimization | 1 | Gas usage benchmarks |
 
-2. **Project Proposal Tests** (7 tests)
-   - Project creation
-   - Metadata validation
-   - Proposal events
+**For detailed testing documentation, see [TESTING.md](TESTING.md).**
 
-3. **Voter Authorization Tests** (8 tests)
-   - Authorization flow
-   - Revocation
-   - Permission checks
+---
 
-4. **Voting Round Tests** (10 tests)
-   - Round creation
-   - State transitions
-   - Multiple rounds
-
-5. **Vote Submission Tests** (10 tests)
-   - Encrypted voting
-   - Score validation
-   - Double-vote prevention
-
-6. **Access Control Tests** (5 tests)
-   - Admin functions
-   - Voter restrictions
-   - Permission modifiers
-
-7. **View Functions Tests** (6 tests)
-   - Data retrieval
-   - Status queries
-   - Result access
-
-8. **Edge Cases Tests** (5 tests)
-   - Boundary conditions
-   - Error scenarios
-   - Invalid inputs
-
-### Run Specific Tests
+## 🔧 Development Scripts
 
 ```bash
-# Deployment tests
-npm test -- --grep "Deployment"
+# Compilation
+npm run compile          # Compile all contracts
+npm run clean            # Clean artifacts and cache
 
-# Voting tests
-npm test -- --grep "Vote Submission"
+# Testing
+npm test                 # Run test suite
+npm run test:verbose     # Verbose test output
+npm run test:gas         # Run with gas reporting
+npm run coverage         # Generate coverage report
 
-# All tests with gas report
+# Code Quality
+npm run lint             # Lint Solidity and JavaScript
+npm run lint:sol         # Lint Solidity files
+npm run lint:js          # Lint JavaScript files
+npm run format           # Format all code with Prettier
+npm run format:check     # Check code formatting
+
+# Deployment
+npm run deploy:local     # Deploy to local Hardhat network
+npm run deploy:sepolia   # Deploy to Sepolia testnet
+npm run deploy:zama      # Deploy to Zama devnet
+
+# Verification & Interaction
+npm run verify:sepolia   # Verify contract on Etherscan
+npm run interact         # Interact with deployed contract
+npm run simulate         # Run full workflow simulation
+```
+
+---
+
+## 🌐 Deployment
+
+### Deploy to Sepolia Testnet
+
+1. **Fund Your Wallet**
+   - Get Sepolia ETH from [Sepolia Faucet](https://sepoliafaucet.com/)
+   - Ensure you have at least 0.1 ETH for deployment and testing
+
+2. **Deploy Contract**
+   ```bash
+   npm run deploy:sepolia
+   ```
+
+3. **Verify Contract on Etherscan**
+   ```bash
+   npm run verify:sepolia
+   ```
+
+4. **Deployment Output**
+   ```
+   Deploying to network: sepolia
+   Deployer address: 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb
+
+   ✓ Contract deployed successfully!
+   ┌─────────────────────────────────────────────────────────┐
+   │ Contract Address: 0x5FbDB2315678afecb367f032d93F642f64180aa3 │
+   │ Network: sepolia (Chain ID: 11155111)                   │
+   │ Block: 12345678                                          │
+   │ Gas Used: 2,456,789                                      │
+   │ Etherscan: https://sepolia.etherscan.io/address/0x...   │
+   └─────────────────────────────────────────────────────────┘
+
+   Deployment info saved to: deployments/sepolia-latest.json
+   ```
+
+### Deploy to Zama Devnet
+
+```bash
+npm run deploy:zama
+```
+
+**Network Information:**
+- **Chain ID**: 8009
+- **RPC URL**: https://devnet.zama.ai
+- **Block Explorer**: https://explorer.zama.ai
+- **Faucet**: https://faucet.zama.ai
+
+**For complete deployment documentation, see [DEPLOYMENT.md](DEPLOYMENT.md).**
+
+---
+
+## 📖 Usage Guide
+
+### 1. Register as Rights Holder
+
+```javascript
+const tx = await contract.registerRightsHolder();
+await tx.wait();
+console.log("✓ Registered as rights holder");
+```
+
+### 2. Owner Verifies Rights Holder
+
+```javascript
+// Only contract owner can verify
+const tx = await contract.verifyRightsHolder(holderAddress);
+await tx.wait();
+console.log("✓ Rights holder verified");
+```
+
+### 3. Register Track with Encrypted Shares
+
+```javascript
+// Shares are represented as integers: 5000 = 50.00%
+const holders = [creator, producer, distributor];
+const shares = [
+  TFHE.encrypt32(5000),  // Creator: 50%
+  TFHE.encrypt32(3000),  // Producer: 30%
+  TFHE.encrypt32(2000)   // Distributor: 20%
+];
+
+const metadataURI = "ipfs://QmX...";
+
+const tx = await contract.registerTrack(metadataURI, holders, shares);
+await tx.wait();
+console.log("✓ Track registered with encrypted shares");
+```
+
+### 4. Create Royalty Pool
+
+```javascript
+const trackId = 0;
+const royaltyAmount = ethers.parseEther("10.0"); // 10 ETH
+
+const tx = await contract.createRoyaltyPool(trackId, {
+  value: royaltyAmount
+});
+await tx.wait();
+console.log("✓ Royalty pool created");
+```
+
+### 5. Distribute Royalties (Confidential)
+
+```javascript
+const poolId = 0;
+const tx = await contract.distributeRoyalties(poolId);
+await tx.wait();
+console.log("✓ Royalties distributed (encrypted)");
+```
+
+### 6. Claim Payment
+
+```javascript
+// Rights holder claims their share
+const tx = await contract.claimRoyalty(poolId);
+await tx.wait();
+console.log("✓ Payment claimed successfully");
+```
+
+### Full Workflow Simulation
+
+```bash
+npm run simulate
+```
+
+This script demonstrates:
+- Contract deployment
+- Rights holder registration and verification
+- Track registration with 3 rights holders
+- Royalty pool creation with 10 ETH
+- Automated distribution calculation
+- Individual payment claims
+
+---
+
+## 🏆 Tech Stack
+
+### Smart Contracts
+- **Solidity** v0.8.24 - Smart contract language
+- **Zama FHEVM** v0.7.0 - Fully Homomorphic Encryption
+- **OpenZeppelin** - Security utilities
+
+### Development Tools
+- **Hardhat** v2.19.0 - Development framework
+- **Ethers.js** v6.14.0 - Blockchain interaction
+- **Mocha + Chai** - Testing framework
+- **Hardhat Gas Reporter** - Gas optimization
+
+### Code Quality
+- **Solhint** v5.0.3 - Solidity linter
+- **ESLint** - JavaScript linter
+- **Prettier** v3.3.3 - Code formatter
+- **Commitlint** - Conventional commits
+
+### CI/CD & Automation
+- **GitHub Actions** - Automated testing
+- **Husky** - Git hooks (pre-commit checks)
+- **Lint-staged** - Staged file linting
+- **Codecov** - Coverage reporting
+
+### Networks
+- **Sepolia Testnet** (Chain ID: 11155111)
+- **Zama Devnet** (Chain ID: 8009)
+- **Hardhat Local** (Chain ID: 1337)
+
+---
+
+## 🆕 New: PrivateMusicRoyalty React Version
+
+### Overview
+
+Located in `D:\PrivateMusicRoyalty`, this is a **modern React-based implementation** of the privacy-preserving music royalty distribution platform, featuring full FHEVM SDK integration and a component-based architecture.
+
+### Key Improvements
+
+- ✅ **React 18.2.0** - Modern React with hooks and functional components
+- ✅ **Vite 5.0.8** - Lightning-fast build tool and HMR (Hot Module Replacement)
+- ✅ **TypeScript 5.3.3** - Full type safety throughout the application
+- ✅ **FHEVM SDK Integration** - Uses workspace-linked `@fhevm/sdk` package
+- ✅ **Component Architecture** - Modular, reusable React components
+- ✅ **Modern Development Workflow** - ESLint, Prettier, and development scripts
+
+### Technology Stack
+
+#### Frontend Framework
+- **React** v18.2.0 - UI library with hooks
+- **React-DOM** v18.2.0 - DOM rendering
+- **Vite** v5.0.8 - Build tool and dev server
+- **TypeScript** v5.3.3 - Static typing
+
+#### Blockchain & Privacy
+- **@fhevm/sdk** (workspace) - Universal FHEVM SDK for React
+- **@fhevm/solidity** v0.7.0 - FHE smart contract library
+- **@zama-fhe/oracle-solidity** v0.1.0 - Decryption oracle
+- **Ethers.js** v6.14.0 - Ethereum interaction
+- **fhevmjs** v0.5.0 - FHEVM JavaScript library
+
+#### Smart Contract Development
+- **Hardhat** v2.19.0 - Development environment
+- **@fhevm/hardhat-plugin** v0.0.1-3 - FHEVM Hardhat integration
+- **@fhevm/mock-utils** v0.0.1-3 - Testing utilities
+- **@nomicfoundation/hardhat-ethers** v3.1.0 - Ethers plugin
+- **@zama-fhe/relayer-sdk** v0.1.2 - Relay network SDK
+
+#### Code Quality & Linting
+- **ESLint** v8.55.0 - JavaScript/TypeScript linter
+- **@typescript-eslint/eslint-plugin** v6.13.0 - TypeScript linting rules
+- **@typescript-eslint/parser** v6.13.0 - TypeScript parser
+- **eslint-plugin-react-hooks** v4.6.0 - React hooks linting
+- **eslint-plugin-react-refresh** v0.4.5 - React refresh support
+- **Prettier** v3.1.0 - Code formatter
+
+#### Type Definitions
+- **@types/react** v18.2.45 - React type definitions
+- **@types/react-dom** v18.2.18 - React-DOM type definitions
+
+### Project Structure
+
+```
+PrivateMusicRoyalty/
+├── src/
+│   ├── components/              # React components
+│   │   ├── ConnectWallet.tsx    # Wallet connection UI
+│   │   ├── RegisterRightsHolder.tsx # Rights holder registration
+│   │   ├── RegisterTrack.tsx    # Track registration form
+│   │   ├── CreateRoyaltyPool.tsx # Pool creation
+│   │   ├── ClaimRoyalty.tsx     # Royalty claiming
+│   │   └── SystemInfo.tsx       # System statistics
+│   ├── lib/
+│   │   └── contract.ts          # Contract ABI and configuration
+│   ├── types/
+│   │   └── index.ts             # TypeScript type definitions
+│   ├── App.tsx                  # Main React component
+│   ├── main.tsx                 # React entry point
+│   ├── index.css                # Global styles
+│   └── vite-env.d.ts            # Vite environment types
+├── contracts/
+│   └── PrivateMusicRoyalty.sol  # FHE-enabled smart contract
+├── scripts/
+│   └── deploy.js                # Deployment scripts
+├── public/                      # Static assets
+├── index.html                   # Entry HTML
+├── vite.config.ts               # Vite configuration
+├── tsconfig.json                # TypeScript configuration
+├── hardhat.config.js            # Hardhat configuration
+├── package.json                 # Dependencies and scripts
+└── README.md                    # Documentation
+```
+
+### Available Scripts
+
+```bash
+# Frontend Development
+npm run dev              # Start Vite dev server (port 3001)
+npm run build            # Build production bundle
+npm run preview          # Preview production build
+
+# Smart Contract
+npm run compile          # Compile Solidity contracts
+npm run deploy:local     # Deploy to local Hardhat network
+npm run deploy:sepolia   # Deploy to Sepolia testnet
+npm run deploy:zama      # Deploy to Zama devnet
+npm test                 # Run Hardhat tests
+npm run node             # Start Hardhat node
+npm run clean            # Clean artifacts and cache
+npm run verify           # Verify contract on Etherscan
+
+# Code Quality
+npm run lint             # Lint TypeScript/TSX files
+npm run format           # Format code with Prettier
+```
+
+### Key Features
+
+#### Component-Based Architecture
+- **Modular Components**: Each feature is isolated in its own component
+- **State Management**: Centralized state management in App.tsx
+- **Props & Callbacks**: Clean data flow through props and callback functions
+- **Type Safety**: Full TypeScript typing for all components
+
+#### FHEVM SDK Integration
+- **Workspace Dependency**: Uses `@fhevm/sdk` from monorepo workspace
+- **React Hooks**: Leverages SDK's React hooks for FHE operations
+- **Encryption**: Client-side encryption before blockchain interaction
+- **Decryption**: Secure decryption flow with EIP-712 signatures
+
+#### Development Experience
+- **Hot Module Replacement**: Instant feedback with Vite HMR
+- **TypeScript IntelliSense**: Full IDE support with type definitions
+- **ESLint Integration**: Real-time linting and error detection
+- **Prettier Formatting**: Consistent code style across the project
+
+### Comparison: Vanilla JS vs React Version
+
+| Feature | Original (Vanilla JS) | React Version |
+|---------|----------------------|---------------|
+| **Framework** | None | React 18.2 + Vite 5.0 |
+| **Language** | JavaScript | TypeScript 5.3 |
+| **Architecture** | Single HTML file | Component-based |
+| **State Management** | DOM manipulation | React state & hooks |
+| **Build Tool** | http-server | Vite with HMR |
+| **Type Safety** | None | Full TypeScript |
+| **SDK Integration** | Manual ethers.js | @fhevm/sdk workspace |
+| **Linting** | None | ESLint + Prettier |
+| **Development Speed** | Manual refresh | Hot Module Replacement |
+| **Code Organization** | Single file | Modular components |
+
+### Getting Started with React Version
+
+1. **Navigate to the directory:**
+   ```bash
+   cd D:\\PrivateMusicRoyalty
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open in browser:**
+   ```
+   http://localhost:3001
+   ```
+
+5. **Connect MetaMask and interact with the dApp!**
+
+### Why React Version?
+
+- **Scalability**: Component-based architecture scales better for complex features
+- **Maintainability**: Modular code is easier to understand and maintain
+- **Developer Experience**: Modern tooling (Vite, TypeScript) improves productivity
+- **Type Safety**: TypeScript catches errors at compile-time, not runtime
+- **SDK Integration**: Native support for FHEVM SDK React hooks
+- **Performance**: Vite provides lightning-fast HMR and optimized production builds
+- **Modern Stack**: Aligns with current industry standards and best practices
+
+### Migration Benefits
+
+✅ **From Static HTML to SPA**: Single-page application with smooth navigation
+✅ **From Vanilla JS to React**: Declarative UI with automatic re-rendering
+✅ **From JavaScript to TypeScript**: Type safety reduces bugs
+✅ **From Manual Setup to Vite**: Professional development workflow
+✅ **From Direct Ethers.js to SDK**: Simplified FHE operations with abstraction
+✅ **From Inline Styles to CSS Modules**: Better style organization
+
+This React version represents the **future-ready** implementation of the privacy-preserving music royalty platform, combining modern web development practices with cutting-edge FHE technology.
+
+---
+
+## 📊 Project Structure
+
+```
+privacy-preserving-music-royalty/
+├── .github/
+│   ├── workflows/
+│   │   ├── test.yml              # Automated testing workflow
+│   │   └── manual.yml            # Manual workflow dispatch
+│   └── README.md                 # Workflows documentation
+│
+├── .husky/
+│   ├── pre-commit                # Pre-commit quality checks
+│   └── commit-msg                # Commit message validation
+│
+├── contracts/
+│   └── PrivateMusicRoyalty.sol   # Main FHE-enabled contract
+│
+├── scripts/
+│   ├── deploy.js                 # Deployment script
+│   ├── verify.js                 # Contract verification
+│   ├── interact.js               # Interaction examples
+│   └── simulate.js               # Full workflow simulation
+│
+├── test/
+│   └── PrivateMusicRoyalty.test.js # 21+ comprehensive tests
+│
+├── deployments/                  # Deployment info (gitignored)
+│
+├── Configuration Files
+│   ├── hardhat.config.js         # Hardhat configuration
+│   ├── hardhat.config.temp.js    # Temp config (no FHE plugin)
+│   ├── .solhint.json             # Solidity linter config
+│   ├── .eslintrc.json            # JavaScript linter config
+│   ├── .prettierrc.json          # Code formatter config
+│   ├── .commitlintrc.json        # Commit message rules
+│   ├── .gitattributes            # Git line endings
+│   └── .env.example              # Environment template
+│
+├── Documentation
+│   ├── README.md                 # This file
+│   ├── LICENSE                   # MIT License
+│   ├── DEPLOYMENT.md             # Deployment guide
+│   ├── TESTING.md                # Testing documentation
+│   ├── CI_CD.md                  # CI/CD pipeline guide
+│   ├── SECURITY.md               # Security best practices
+│   ├── PERFORMANCE.md            # Performance optimization
+│   ├── TOOLCHAIN.md              # Toolchain integration
+│   └── PROJECT_SUMMARY.md        # Project completion summary
+│
+├── demo.mp4                      # Demonstration video
+└── package.json                  # Dependencies and scripts
+```
+
+---
+
+## 🔒 Security Features
+
+### Multi-Layer Security Architecture
+
+```
+Layer 1: Code Quality (Solhint, ESLint, Prettier)
+           ↓
+Layer 2: Access Control (Owner, Verified Rights Holders)
+           ↓
+Layer 3: DoS Protection (Rate limits, Gas limits)
+           ↓
+Layer 4: Data Privacy (FHE encryption)
+           ↓
+Layer 5: Testing (21+ test cases, >80% coverage)
+           ↓
+Layer 6: Automation (Pre-commit hooks, CI/CD)
+```
+
+### Security Best Practices
+
+- ✅ **Custom Errors** - Gas-efficient error handling (~5,800 gas saved per revert)
+- ✅ **Access Control** - `onlyOwner` and `onlyVerifiedRightsHolder` modifiers
+- ✅ **Input Validation** - Comprehensive checks on all function parameters
+- ✅ **Reentrancy Protection** - Checks-Effects-Interactions pattern
+- ✅ **Gas Optimization** - Storage packing, external functions, compiler optimization
+- ✅ **FHE Encryption** - All sensitive data encrypted on-chain
+- ✅ **Automated Auditing** - Pre-commit security checks with Solhint
+
+**For comprehensive security documentation, see [SECURITY.md](SECURITY.md).**
+
+---
+
+## ⚡ Performance Optimization
+
+### Gas Optimization Techniques
+
+| Technique | Implementation | Gas Savings |
+|-----------|----------------|-------------|
+| Custom Errors | `error NotAuthorized()` | ~5,800 gas/revert |
+| Storage Packing | Pack variables in slots | ~5,000 gas/write |
+| External Functions | Use `external` over `public` | ~1,000 gas/call |
+| Cached Storage Reads | Read to memory once | ~2,100 gas/read |
+| Compiler Optimization | `runs: 200` | 10-20% overall |
+
+### Gas Benchmarks
+
+```bash
 npm run test:gas
 ```
 
----
+**Expected Results:**
+- **Track Registration**: < 100,000 gas
+- **Pool Creation**: < 500,000 gas
+- **Distribution**: < 1,000,000 gas
+- **Claim**: < 50,000 gas
 
-## 📦 Deployment
-
-### Deployment Information
-
-The contract is deployed on **Ethereum Sepolia Testnet**.
-
-**Live Application**: [https://fhe-cultural-voting.vercel.app/](https://fhe-cultural-voting.vercel.app/)
-
-### Deployment Process
-
-```bash
-# 1. Configure environment
-cp .env.example .env
-# Edit .env with your keys
-
-# 2. Compile contracts
-npm run compile
-
-# 3. Deploy to Sepolia
-npm run deploy
-
-# 4. Verify on Etherscan
-npm run verify
-```
-
-### Post-Deployment
-
-Deployment information is saved in `deployments/sepolia.json`:
-
-```json
-{
-  "network": "sepolia",
-  "contractAddress": "0x...",
-  "deployer": "0x...",
-  "deploymentTime": "2025-01-15T10:30:00.000Z",
-  "transactionHash": "0x...",
-  "blockNumber": 5234567
-}
-```
-
-### Interact with Deployed Contract
-
-```bash
-npm run interact
-```
+**For detailed performance documentation, see [PERFORMANCE.md](PERFORMANCE.md).**
 
 ---
 
-## 💻 Tech Stack
+## 🔄 CI/CD Pipeline
 
-### Smart Contracts
+This project includes a complete CI/CD pipeline with GitHub Actions:
 
-- **Solidity**: 0.8.24
-- **FHEVM**: Zama's Fully Homomorphic Encryption
-- **Hardhat**: Development environment
-- **OpenZeppelin**: Security patterns
+### Automated Workflows
 
-### FHE Technology
+**`.github/workflows/test.yml`** - Runs on every push/PR:
+- ✅ Multi-version Node.js testing (18.x, 20.x)
+- ✅ Solidity linting (Solhint)
+- ✅ JavaScript linting (ESLint)
+- ✅ Contract compilation
+- ✅ Test suite execution (21+ tests)
+- ✅ Coverage generation and upload to Codecov
+- ✅ Build verification
 
-- **Zama FHEVM**: On-chain FHE operations
-- **euint8**: 8-bit encrypted integers
-- **Homomorphic Operations**: Addition, comparison on encrypted data
-- **Decryption Gateway**: Asynchronous result processing
+**`.github/workflows/manual.yml`** - Manual workflow dispatch for on-demand testing
 
-### Testing & Quality
+### Pre-commit Hooks
 
-- **Mocha/Chai**: Test framework
-- **Hardhat Coverage**: Code coverage analysis
-- **Solhint**: Solidity linting
-- **ESLint**: JavaScript linting
-- **Prettier**: Code formatting
+**Husky** automatically runs before each commit:
+1. Lint Solidity files (`npm run lint:sol`)
+2. Lint JavaScript files (`npm run lint:js`)
+3. Check code formatting (`npm run format:check`)
+4. Run test suite (`npm test`)
 
-### DevOps & CI/CD
-
-- **GitHub Actions**: Automated testing
-- **Husky**: Pre-commit hooks
-- **Gas Reporter**: Cost optimization
-- **Codecov**: Coverage reporting
-
-### Performance Optimization
-
-- **Solidity Optimizer**: 800 runs
-- **Yul Optimizer**: Advanced optimizations
-- **Stack Allocation**: Memory efficiency
-- **EVM Version**: Cancun (latest features)
+**For complete CI/CD documentation, see [CI_CD.md](CI_CD.md).**
 
 ---
 
-## 🔒 Security
+## 📄 Documentation
 
-### Security Measures
+| Document | Description |
+|----------|-------------|
+| [README.md](README.md) | This file - project overview and quick start |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Deployment instructions for all networks |
+| [TESTING.md](TESTING.md) | Testing guide with 21+ test cases |
+| [SECURITY.md](SECURITY.md) | Security architecture and best practices |
+| [PERFORMANCE.md](PERFORMANCE.md) | Performance optimization techniques |
+| [TOOLCHAIN.md](TOOLCHAIN.md) | Complete toolchain integration guide |
+| [CI_CD.md](CI_CD.md) | CI/CD pipeline configuration |
+| [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) | Comprehensive project completion summary |
 
-| Feature | Implementation | Impact |
-|---------|---------------|--------|
-| **Access Control** | Role-based permissions | ⭐⭐⭐ |
-| **Input Validation** | Score bounds, project checks | ⭐⭐⭐ |
-| **DoS Prevention** | Bounded loops, gas limits | ⭐⭐⭐ |
-| **Encryption** | FHE for all votes | ⭐⭐⭐ |
-| **Reentrancy** | Checks-Effects-Interactions | ⭐⭐⭐ |
-| **Code Quality** | Linting, testing, auditing | ⭐⭐⭐ |
+---
 
-### Best Practices
+## 🤝 Contributing
 
-```solidity
-// ✅ Access control with modifiers
-modifier onlyAdmin() {
-    require(msg.sender == admin, "Not authorized");
-    _;
-}
+Contributions are welcome! Please follow these guidelines:
 
-// ✅ Input validation
-require(_score >= 1 && _score <= 10, "Score must be between 1-10");
+1. **Fork the Repository**
+2. **Create Feature Branch** (`git checkout -b feature/amazing-feature`)
+3. **Commit Changes** (`git commit -m 'feat: add amazing feature'`)
+4. **Push to Branch** (`git push origin feature/amazing-feature`)
+5. **Open Pull Request**
 
-// ✅ Double-vote prevention
-require(!votes[round][projectId][voter].hasVoted, "Already voted");
+### Commit Message Format
 
-// ✅ Bounded operations
-require(projectIds.length <= 100, "Too many projects");
+This project uses **Conventional Commits**:
 
-// ✅ FHE permissions
-FHE.allowThis(encryptedScore);
-FHE.allow(encryptedScore, msg.sender);
 ```
+type(scope): subject
 
-### Security Auditing
-
-```bash
-# Run security checks
-npm run lint:sol
-npm run security:check
-
-# Check dependencies
-npm audit
+feat: add new feature
+fix: fix bug
+docs: update documentation
+style: format code
+refactor: refactor code
+perf: improve performance
+test: add tests
+chore: update dependencies
 ```
-
----
-
-## 📚 Documentation
-
-- **README.md**: This file
-- **TESTING.md**: Comprehensive test documentation
-- **SECURITY.md**: Security and optimization guide
-- **CICD.md**: CI/CD pipeline documentation
-- **DEPLOYMENT.md**: Deployment instructions
-
----
-
-## 🎬 Video Demo
-
-**📹 Download `demo.mp4` to watch the complete demonstration**
-
-The video covers:
-- Platform overview and features
-- Encrypted voting workflow
-- Privacy guarantees demonstration
-- Smart contract interaction
-- Results aggregation and revelation
-- Technical architecture walkthrough
-
-*Note: The video file must be downloaded and played locally. Direct streaming links are not available.*
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+```
+MIT License
+
+Copyright (c) 2025 Privacy-Preserving Music Royalty
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
 
 ---
 
-## 🙏 Acknowledgments
+## ⚠️ Disclaimer
 
-- **Zama**: For FHEVM technology and FHE Challenge
-- **Ethereum Foundation**: For Sepolia testnet
-- **OpenZeppelin**: For security best practices
-- **Hardhat Team**: For development tools
+This is a **demonstration project** showcasing Zama FHEVM technology for privacy-preserving music royalty distribution.
 
----
-
-## 📞 Contact & Support
-
-- **GitHub**: [https://github.com/KittyOrn/FHECulturalVoting](https://github.com/KittyOrn/FHECulturalVoting)
-- **Live Demo**: [https://fhe-cultural-voting.vercel.app/](https://fhe-cultural-voting.vercel.app/)
-- **Issues**: [GitHub Issues](https://github.com/KittyOrn/FHECulturalVoting/issues)
+**Important Notes:**
+- This project is for educational and demonstration purposes
+- Conduct thorough security audits before production use
+- Test extensively on testnets before mainnet deployment
+- Ensure compliance with local regulations regarding music rights and royalties
+- The FHE decryption mechanism requires proper Gateway oracle configuration
 
 ---
 
-**Built with ❤️ for the Zama FHE Challenge**
+## 🌟 Acknowledgments
 
-*Enabling privacy-preserving democracy in arts and culture through Fully Homomorphic Encryption*
+This project is built with:
+- **Zama FHEVM** - Fully Homomorphic Encryption technology ([docs.zama.ai](https://docs.zama.ai))
+- **Hardhat** - Ethereum development framework ([hardhat.org](https://hardhat.org))
+- **OpenZeppelin** - Smart contract security standards ([openzeppelin.com](https://openzeppelin.com))
+
+Special thanks to the Zama team for pioneering privacy-preserving smart contracts with FHEVM technology.
+
+---
+
+## 🔗 Links & Resources
+
+### Project Links
+- **🌐 Live Demo**: [https://fhe-music-royalty.vercel.app/](https://fhe-music-royalty.vercel.app/)
+- **💻 GitHub Repository**: [https://github.com/HannaSchinner/FHEMusicRoyalty](https://github.com/HannaSchinner/FHEMusicRoyalty)
+- **📹 Demo Video**: Download `demo.mp4` from repository
+
+### Official Documentation
+- [Zama Documentation](https://docs.zama.ai) - FHEVM guides and tutorials
+- [Hardhat Documentation](https://hardhat.org/docs) - Development framework
+- [Solidity Documentation](https://docs.soliditylang.org) - Smart contract language
+- [Ethers.js Documentation](https://docs.ethers.org) - Blockchain interaction
+
+### Network Resources
+- [Sepolia Faucet](https://sepoliafaucet.com/) - Get testnet ETH
+- [Sepolia Explorer](https://sepolia.etherscan.io) - Block explorer
+- [Zama Devnet](https://devnet.zama.ai) - FHE testnet
+- [Zama Explorer](https://explorer.zama.ai) - Zama block explorer
+
+### Community
+- [GitHub Issues](https://github.com/HannaSchinner/FHEMusicRoyalty/issues) - Report bugs or request features
+- [Zama Discord](https://discord.gg/zama) - Join the FHEVM community
+
+---
+
+<div align="center">
+
+**🎵 Built with Zama FHEVM Technology 🔐**
+
+**Empowering Fair Music Royalty Distribution with Privacy**
+
+[⭐ Star this repo](https://github.com/HannaSchinner/FHEMusicRoyalty) | [🐛 Report Bug](https://github.com/HannaSchinner/FHEMusicRoyalty/issues) | [💡 Request Feature](https://github.com/HannaSchinner/FHEMusicRoyalty/issues)
+
+</div>
