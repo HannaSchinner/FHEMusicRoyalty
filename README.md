@@ -9,7 +9,6 @@ A decentralized music royalty distribution platform leveraging Fully Homomorphic
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 ---
----
 
 ## 🌐 Live Demo
 
